@@ -1,35 +1,67 @@
-# Rialo Live (静态站)
+RialoStream: The Next-Gen High-Performance Web3 Live Tipping Platform Built on Rialo
 
-这是一个小型静态页面，用于展示 Web3 直播界面并能播放 HLS 直播流。已经包含配置以直接部署到 Vercel（`vercel.json`）。
+1. Problem & Solution
 
-快速开始（本地预览）
+The Problem
 
-1. 确保在项目根目录：
+High Latency & Excessive Fees: Traditional Web2 tipping platforms charge 30-50% in fees. Meanwhile, legacy Web3 payment systems suffer from long block confirmation times, causing significant delays in live stream interactions.
 
-```powershell
-cd d:\source\node\web\rialo
-```
+Fragmented Interaction: Users often have to leave the stream to interact with their wallets, breaking the immersion and preventing real-time feedback.
 
-2. 使用 `serve` 快速启动本地静态服务器（如果没有 `serve`，命令会用 npx 下载并执行）：
+Payment Silos: Tipping is usually restricted to a single chain, making cross-chain liquidity difficult for global audiences.
 
-```powershell
-npm run start
-# 然后打开 http://localhost:3000
-```
+Our Solution
 
-在 Vercel 上部署
+Zero Fees with Rialo Cruise: By integrating Rialo Cruise, we implement native gas-less transactions, ensuring that 100% of a fan's support goes directly to the creator.
 
-- 将此仓库推到 GitHub，然后在 Vercel 中导入仓库，使用默认设置即可部署为静态站点。
-- `vercel.json` 已包含基础静态构建配置。
+Millisecond Feedback Loop: Leveraging Rialo Consensus (50ms block time), tipping feedback (such as on-screen effects or leaderboard updates) happens almost instantly, drastically enhancing the interactive experience.
 
-替换为真实直播流
+Seamless Fiat-to-Crypto Integration: Using Rialo’s Stripe bridge, we enable users to purchase crypto and tip via fiat seamlessly, lowering the barrier to entry for Web2 users.
 
-- 默认使用了一个公开 HLS 测试流：`https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8`。
-- 若要接入你的真实直播 m3u8 地址，请打开 `index.html` 并找到顶部脚本中 `STREAM_URL` 常量，将其替换为你的 m3u8 地址。
+2. Current Execution & Progress
 
-注意事项
+Current Stage: MVP (Minimum Viable Product) Complete
 
-- HLS 在 Safari/iOS 上原生支持；在大多数桌面浏览器（Chrome/Firefox）上使用 hls.js 转码并播放。
-- 若需要把直播地址作为可配置项（不想直接写在 HTML），可以考虑把地址放到一个简单的 JSON 配置文件并在部署时替换，或通过后端 API 提供（需要服务器端支持）。
+Frontend Interaction: Completed a high-fidelity, flat-design Web UI with full responsive support for mobile and desktop.
 
-如需我把真实 m3u8 地址写入并帮你做其他部署自动化（如 CI/CD、环境变量注入等），把地址或需求告诉我即可。
+Wallet Integration: Implemented mock wallet connection logic and tipping workflows, featuring a gift grid and custom amount modules.
+
+Backend Simulation: Developed an in-memory real-time leaderboard to demonstrate millisecond-level state updates.
+
+Next Steps
+
+Testnet Integration: Currently bridging to the Rialo Testnet to replace simulated tips with real on-chain smart contract calls.
+
+Identity System: Preparing to integrate Rialo IPC to provide compliant and privacy-preserving user identity authentication.
+
+3. Vision & Roadmap
+
+Vision
+
+To build a "Unified, Safe, Private, Fast" global creator economy hub where every artist can receive fair, transparent, and instantaneous rewards powered by the ultra-fast Rialo network.
+
+Roadmap
+
+Q2 2024: Launch Beta version supporting tipping via Rialo native tokens.
+
+Q3 2024: Integrate Rialo Interop, allowing fans to tip using assets from other major blockchains.
+
+Q4 2024: Enable Rialo Stream Oracle to trigger on-chain rewards based on real-world data (e.g., likes or viewer count).
+
+2025: Deploy privacy-focused tipping features based on Rialo VM (ZK-friendly) to protect the financial privacy of major donors.
+
+4. Fit with the Rialo Ecosystem
+
+RialoStream serves as the ultimate showcase for Rialo’s advanced technology stack:
+
+Performance Synergy: Rialo’s 50ms block time is a prerequisite for live interaction—a feat nearly impossible on other blockchains.
+
+Full-Stack Utilization:
+
+Rialo Omni Account: Allows users to manage tipping funds across multiple chains from a single account.
+
+Rialo Read Path: We use the Read Path to pull state directly from validators, reducing leaderboard update latency from seconds to under 100ms.
+
+Rialo Execution Engine: Uses event-driven execution to automate complex revenue-sharing contracts for streamers.
+
+Business Ecosystem: The integration with Stripe (as shown in the Rialo architecture) is our key to onboarding millions of Web2 users. RialoStream proves that Rialo is not just infrastructure, but a fertile ground for high-frequency social applications.
