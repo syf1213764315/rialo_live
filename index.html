@@ -42,6 +42,17 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        .lang-btn {
+            color: #94a3b8;
+        }
+        .lang-btn:hover {
+            color: #f1f5f9;
+        }
+        .lang-btn.active {
+            background: rgba(99, 102, 241, 0.5);
+            color: #fff;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
@@ -57,12 +68,17 @@
         </div>
 
         <div class="flex items-center space-x-4">
+            <!-- 语言切换 中/英 -->
+            <div class="flex rounded-lg overflow-hidden border border-slate-600 bg-slate-800/80">
+                <button type="button" id="lang-zh" onclick="setLang('zh')" class="lang-btn px-3 py-1.5 text-sm font-medium transition-colors" data-lang="zh">中文</button>
+                <button type="button" id="lang-en" onclick="setLang('en')" class="lang-btn px-3 py-1.5 text-sm font-medium transition-colors" data-lang="en">EN</button>
+            </div>
             <div id="wallet-status" class="hidden md:flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
                 <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <span class="text-sm text-slate-400 font-mono" id="wallet-address">0x71C...3921</span>
             </div>
             <button id="connect-btn" onclick="toggleWallet()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-lg shadow-indigo-600/20 active:scale-95">
-                连接钱包
+                <span id="connect-btn-text" data-i18n="connectBtn">连接钱包</span>
             </button>
         </div>
     </nav>
@@ -82,14 +98,14 @@
                         <button id="play-btn" onclick="startStream()" class="w-20 h-20 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all group">
                             <i class="fas fa-play text-2xl group-hover:scale-110 transition-transform"></i>
                         </button>
-                        <p class="mt-4 text-slate-300 font-medium">点击加载直播内容</p>
+                        <p class="mt-4 text-slate-300 font-medium" data-i18n="clickToLoad">点击加载直播内容</p>
                     </div>
                 </div>
                 
                 <!-- 直播状态标签 -->
                 <div class="absolute top-6 left-6 flex space-x-2">
                     <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-md flex items-center">
-                        <span class="w-1.5 h-1.5 bg-white rounded-full mr-2 animate-ping"></span> 直播中
+                        <span class="w-1.5 h-1.5 bg-white rounded-full mr-2 animate-ping"></span> <span data-i18n="liveBadge">直播中</span>
                     </span>
                     <span class="bg-black/40 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-md">
                         <i class="far fa-user mr-1"></i> 12,482 观看
@@ -103,55 +119,49 @@
                     <img src="EFq-H2Uq_400x400.jpg" class="w-14 h-14 rounded-2xl bg-indigo-100" alt="Avatar">
                     <div>
                         <h2 class="text-xl font-bold">ayun24335167</h2>
-                        <p class="text-slate-400 text-sm">正在直播: 探索以太坊 L2 层的未来机遇 🚀</p>
+                        <p class="text-slate-400 text-sm" data-i18n="streamTitle">正在直播: 探索以太坊 L2 层的未来机遇 🚀</p>
                     </div>
                 </div>
                 <div class="flex space-x-3">
-                    <a href="https://x.com/ayun24335167" target="_blank" rel="noopener noreferrer" class="flex-1 md:flex-none px-6 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl font-medium transition-colors text-center">关注</a>
-                    <button class="flex-1 md:flex-none px-6 py-2.5 bg-indigo-600/20 text-indigo-400 border border-indigo-600/30 rounded-xl font-medium">分享</button>
+                    <a href="https://x.com/ayun24335167" target="_blank" rel="noopener noreferrer" class="flex-1 md:flex-none px-6 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl font-medium transition-colors text-center" data-i18n="follow">关注</a>
+                    <button class="flex-1 md:flex-none px-6 py-2.5 bg-indigo-600/20 text-indigo-400 border border-indigo-600/30 rounded-xl font-medium" data-i18n="share">分享</button>
                 </div>
             </div>
-        </div>
 
-        <!-- 右侧：打赏与聊天 -->
-        <div class="lg:col-span-4 flex flex-col gap-6">
-            
-            <!-- 打赏面板 -->
-            <div class="glass-panel p-6 rounded-3xl flex flex-col h-full border-t-4 border-t-indigo-500">
+            <!-- 打赏面板（挪到主播信息下方）-->
+            <div class="glass-panel p-6 rounded-3xl flex flex-col border-t-4 border-t-indigo-500">
                 <div class="mb-6">
                     <h3 class="text-lg font-bold flex items-center">
-                        <i class="fas fa-gem text-indigo-400 mr-2"></i> 链上打赏
+                        <i class="fas fa-gem text-indigo-400 mr-2"></i> <span data-i18n="tipTitle">链上打赏</span>
                     </h3>
-                    <p class="text-slate-400 text-xs mt-1">支持 ETH, USDC 及主流代币</p>
+                    <p class="text-slate-400 text-xs mt-1" data-i18n="tipDesc">支持 ETH, USDC 及主流代币</p>
                 </div>
 
-                <!-- 礼物网格 -->
                 <div class="grid grid-cols-2 gap-4 mb-8">
-                    <button onclick="selectGift('Coffee', 0.001)" class="reward-card glass-panel p-4 rounded-2xl text-center border border-slate-700 hover:border-indigo-500 group transition-all">
+                    <button onclick="selectGift('giftCoffee', 0.001)" class="reward-card glass-panel p-4 rounded-2xl text-center border border-slate-700 hover:border-indigo-500 group transition-all">
                         <span class="text-2xl mb-2 block">☕</span>
-                        <span class="block text-sm font-bold">咖啡</span>
+                        <span class="block text-sm font-bold" data-i18n="giftCoffee">咖啡</span>
                         <span class="text-xs text-indigo-400 font-mono">0.001 ETH</span>
                     </button>
-                    <button onclick="selectGift('Beer', 0.005)" class="reward-card glass-panel p-4 rounded-2xl text-center border border-slate-700 hover:border-indigo-500 group transition-all">
+                    <button onclick="selectGift('giftBeer', 0.005)" class="reward-card glass-panel p-4 rounded-2xl text-center border border-slate-700 hover:border-indigo-500 group transition-all">
                         <span class="text-2xl mb-2 block">🍺</span>
-                        <span class="block text-sm font-bold">啤酒</span>
+                        <span class="block text-sm font-bold" data-i18n="giftBeer">啤酒</span>
                         <span class="text-xs text-indigo-400 font-mono">0.005 ETH</span>
                     </button>
-                    <button onclick="selectGift('Rocket', 0.05)" class="reward-card glass-panel p-4 rounded-2xl text-center border border-slate-700 hover:border-indigo-500 group transition-all">
+                    <button onclick="selectGift('giftRocket', 0.05)" class="reward-card glass-panel p-4 rounded-2xl text-center border border-slate-700 hover:border-indigo-500 group transition-all">
                         <span class="text-2xl mb-2 block">🚀</span>
-                        <span class="block text-sm font-bold">火箭</span>
+                        <span class="block text-sm font-bold" data-i18n="giftRocket">火箭</span>
                         <span class="text-xs text-indigo-400 font-mono">0.05 ETH</span>
                     </button>
-                    <button onclick="selectGift('Planet', 0.2)" class="reward-card glass-panel p-4 rounded-2xl text-center border border-slate-700 hover:border-indigo-500 group transition-all">
+                    <button onclick="selectGift('giftPlanet', 0.2)" class="reward-card glass-panel p-4 rounded-2xl text-center border border-slate-700 hover:border-indigo-500 group transition-all">
                         <span class="text-2xl mb-2 block">🪐</span>
-                        <span class="block text-sm font-bold">行星</span>
+                        <span class="block text-sm font-bold" data-i18n="giftPlanet">行星</span>
                         <span class="text-xs text-indigo-400 font-mono">0.2 ETH</span>
                     </button>
                 </div>
 
-                <!-- 自定义金额 -->
                 <div class="space-y-4 mb-6">
-                    <label class="text-xs text-slate-400 uppercase tracking-wider font-bold">自定义打赏金额 (ETH)</label>
+                    <label class="text-xs text-slate-400 uppercase tracking-wider font-bold" data-i18n="customAmountLabel">自定义打赏金额 (ETH)</label>
                     <div class="relative">
                         <input type="number" id="custom-amount" placeholder="0.00" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 transition-all font-mono">
                         <span class="absolute right-4 top-3.5 text-slate-500 text-sm">MAX</span>
@@ -159,12 +169,11 @@
                 </div>
 
                 <button onclick="handleTip()" id="tip-btn" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl font-bold text-lg shadow-xl shadow-indigo-600/20 transition-all active:scale-[0.98]">
-                    立即打赏
+                    <span data-i18n="tipButton">立即打赏</span>
                 </button>
 
-                <!-- 最近打赏榜单 -->
                 <div class="mt-8">
-                    <h4 class="text-xs text-slate-500 uppercase font-bold mb-4 tracking-widest text-center italic">—— 贡献榜 ——</h4>
+                    <h4 class="text-xs text-slate-500 uppercase font-bold mb-4 tracking-widest text-center italic" data-i18n="leaderboardTitle">—— 贡献榜 ——</h4>
                     <div class="space-y-4">
                         <div class="flex items-center justify-between text-sm">
                             <div class="flex items-center">
@@ -184,6 +193,32 @@
                 </div>
             </div>
         </div>
+
+        <!-- 右侧：评论区（拉长） -->
+        <div class="lg:col-span-4 flex flex-col min-h-0">
+            <div class="glass-panel p-6 rounded-3xl flex flex-col flex-1 min-h-0 border-t-4 border-t-violet-500">
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold flex items-center">
+                        <i class="fas fa-comments text-violet-400 mr-2"></i> <span data-i18n="commentTitle">直播评论</span>
+                    </h3>
+                    <p class="text-slate-400 text-xs mt-1" data-i18n="commentDesc">发送评论与大家互动</p>
+                </div>
+
+                <div id="comment-list" class="space-y-3 mb-4 flex-1 min-h-0 overflow-y-auto no-scrollbar pr-1" style="min-height: 200px;">
+                    <div id="comment-list-empty" class="text-slate-500 text-sm text-center py-6" data-i18n="commentEmpty">暂无评论，来发第一条吧 ~</div>
+                </div>
+
+                <div class="flex gap-2 shrink-0">
+                    <input type="text" id="comment-input" data-i18n-ph="commentPlaceholder" placeholder="说点什么..." maxlength="200"
+                           class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-violet-500 transition-all text-sm placeholder-slate-500">
+                    <button type="button" id="comment-send-btn" onclick="sendComment()"
+                            class="px-5 py-3 bg-violet-600 hover:bg-violet-500 text-white rounded-xl font-medium transition-all active:scale-95 shrink-0">
+                        <i class="fas fa-paper-plane mr-1"></i> <span data-i18n="sendBtn">发送</span>
+                    </button>
+                </div>
+                <p class="text-slate-500 text-xs mt-2" data-i18n="commentHint">最多 200 字，连接钱包后将显示地址</p>
+            </div>
+        </div>
     </main>
 
     <!-- 弹窗通知组件 -->
@@ -197,46 +232,167 @@
     <script>
         let isWalletConnected = false;
 
+        // --- 中/英切换 ---
+        const LANG_STORAGE_KEY = 'rialo_lang';
+        let currentLang = localStorage.getItem(LANG_STORAGE_KEY) || 'zh';
+
+        const translations = {
+            zh: {
+                connectBtn: '连接钱包',
+                disconnectBtn: '断开连接',
+                clickToLoad: '点击加载直播内容',
+                liveBadge: '直播中',
+                streamTitle: '正在直播: 探索以太坊 L2 层的未来机遇 🚀',
+                follow: '关注',
+                share: '分享',
+                tipTitle: '链上打赏',
+                tipDesc: '支持 ETH, USDC 及主流代币',
+                giftCoffee: '咖啡',
+                giftBeer: '啤酒',
+                giftRocket: '火箭',
+                giftPlanet: '行星',
+                customAmountLabel: '自定义打赏金额 (ETH)',
+                tipButton: '立即打赏',
+                leaderboardTitle: '—— 贡献榜 ——',
+                commentTitle: '直播评论',
+                commentDesc: '发送评论与大家互动',
+                commentEmpty: '暂无评论，来发第一条吧 ~',
+                commentPlaceholder: '说点什么...',
+                sendBtn: '发送',
+                commentHint: '最多 200 字，连接钱包后将显示地址',
+                connectSuccess: '钱包连接成功！',
+                disconnectSuccess: '已断开连接',
+                pleaseConnectWallet: '请先连接钱包',
+                enterValidAmount: '请输入有效的打赏金额',
+                tipProcessing: '交易处理中...',
+                tipSuccess: '成功！',
+                tipSuccessMsg: '成功打赏 {amount} ETH！感谢你的支持。',
+                enterComment: '请输入评论内容',
+                commentMaxLength: '评论最多 200 字',
+                commentSent: '评论已发送',
+                commentSaveFail: '评论保存失败',
+                streamError: '直播播放发生错误，请稍后重试',
+                hlsNotSupported: '当前浏览器不支持 HLS 播放，请使用 Safari 或支持 HLS 的浏览器。',
+                guest: '游客',
+                anonymous: '匿名',
+                giftSelected: '已选择 {name}'
+            },
+            en: {
+                connectBtn: 'Connect Wallet',
+                disconnectBtn: 'Disconnect',
+                clickToLoad: 'Click to load live stream',
+                liveBadge: 'LIVE',
+                streamTitle: 'Live: Exploring Ethereum L2 Opportunities 🚀',
+                follow: 'Follow',
+                share: 'Share',
+                tipTitle: 'Tip on-chain',
+                tipDesc: 'ETH, USDC and major tokens supported',
+                giftCoffee: 'Coffee',
+                giftBeer: 'Beer',
+                giftRocket: 'Rocket',
+                giftPlanet: 'Planet',
+                customAmountLabel: 'Custom amount (ETH)',
+                tipButton: 'Tip Now',
+                leaderboardTitle: '—— Leaderboard ——',
+                commentTitle: 'Live Comments',
+                commentDesc: 'Chat with everyone',
+                commentEmpty: 'No comments yet. Be the first!',
+                commentPlaceholder: 'Say something...',
+                sendBtn: 'Send',
+                commentHint: 'Max 200 chars. Wallet address shown when connected.',
+                connectSuccess: 'Wallet connected!',
+                disconnectSuccess: 'Disconnected',
+                pleaseConnectWallet: 'Please connect wallet first',
+                enterValidAmount: 'Enter a valid tip amount',
+                tipProcessing: 'Processing...',
+                tipSuccess: 'Success!',
+                tipSuccessMsg: 'Tipped {amount} ETH. Thank you!',
+                enterComment: 'Please enter a comment',
+                commentMaxLength: 'Comment max 200 characters',
+                commentSent: 'Comment sent',
+                commentSaveFail: 'Failed to save comment',
+                streamError: 'Playback error. Please try again.',
+                hlsNotSupported: 'HLS not supported in this browser. Use Safari or an HLS-capable browser.',
+                guest: 'Guest',
+                anonymous: 'Anonymous',
+                giftSelected: 'Selected {name}'
+            }
+        };
+
+        function t(key) {
+            const lang = translations[currentLang];
+            const fallback = translations.zh;
+            return (lang && lang[key]) || (fallback && fallback[key]) || key;
+        }
+
+        function applyLang() {
+            document.querySelectorAll('[data-i18n]').forEach(function (el) {
+                var k = el.getAttribute('data-i18n');
+                if (k) {
+                    var val = t(k);
+                    if (el.id === 'connect-btn-text') el.textContent = isWalletConnected ? t('disconnectBtn') : val;
+                    else el.textContent = val;
+                }
+            });
+            document.querySelectorAll('[data-i18n-ph]').forEach(function (el) {
+                var k = el.getAttribute('data-i18n-ph');
+                if (k) el.placeholder = t(k);
+            });
+            document.getElementById('lang-zh').classList.toggle('active', currentLang === 'zh');
+            document.getElementById('lang-en').classList.toggle('active', currentLang === 'en');
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem(LANG_STORAGE_KEY, lang);
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+            applyLang();
+            var list = document.getElementById('comment-list');
+            if (list) list.querySelectorAll('.comment-item').forEach(function (el) { el.remove(); });
+            loadComments();
+        }
+
         function toggleWallet() {
             const btn = document.getElementById('connect-btn');
             const status = document.getElementById('wallet-status');
+            const textEl = document.getElementById('connect-btn-text');
             
             if (!isWalletConnected) {
-                // 模拟连接动画
                 btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i>';
                 btn.disabled = true;
                 
                 setTimeout(() => {
                     isWalletConnected = true;
-                    btn.innerHTML = '断开连接';
+                    btn.innerHTML = '<span id="connect-btn-text" data-i18n="connectBtn">' + t('disconnectBtn') + '</span>';
                     btn.classList.replace('bg-indigo-600', 'bg-slate-700');
                     btn.disabled = false;
                     status.classList.remove('hidden');
-                    showToast('钱包连接成功！', 'success');
+                    showToast('connectSuccess', 'success');
                 }, 800);
             } else {
                 isWalletConnected = false;
-                btn.innerHTML = '连接钱包';
+                var span = document.getElementById('connect-btn-text');
+                if (span) span.textContent = t('connectBtn');
                 btn.classList.replace('bg-slate-700', 'bg-indigo-600');
                 status.classList.add('hidden');
-                showToast('已断开连接', 'info');
+                showToast('disconnectSuccess', 'info');
             }
         }
 
-        function selectGift(name, amount) {
+        function selectGift(nameKey, amount) {
             document.getElementById('custom-amount').value = amount;
-            showToast(`已选择 ${name}`, 'info');
+            showToast('giftSelected', 'info', { name: t(nameKey) });
         }
 
         function handleTip() {
             if (!isWalletConnected) {
-                showToast('请先连接钱包', 'error');
+                showToast('pleaseConnectWallet', 'error');
                 return;
             }
 
             const amount = document.getElementById('custom-amount').value;
             if (!amount || amount <= 0) {
-                showToast('请输入有效的打赏金额', 'error');
+                showToast('enterValidAmount', 'error');
                 return;
             }
 
@@ -244,25 +400,28 @@
             const originalText = tipBtn.innerHTML;
             
             tipBtn.disabled = true;
-            tipBtn.innerHTML = '<i class="fas fa-circle-notch animate-spin mr-2"></i> 交易处理中...';
+            tipBtn.innerHTML = '<i class="fas fa-circle-notch animate-spin mr-2"></i> ' + t('tipProcessing');
 
-            // 模拟链上交互
-            setTimeout(() => {
-                tipBtn.innerHTML = '<i class="fas fa-check-circle mr-2"></i> 成功！';
-                showToast(`成功打赏 ${amount} ETH！感谢你的支持。`, 'success');
+            setTimeout(function () {
+                tipBtn.innerHTML = '<i class="fas fa-check-circle mr-2"></i> ' + t('tipSuccess');
+                showToast('tipSuccessMsg', 'success', { amount: amount });
                 
-                setTimeout(() => {
-                    tipBtn.innerHTML = originalText;
+                setTimeout(function () {
+                    tipBtn.innerHTML = '<span data-i18n="tipButton">' + t('tipButton') + '</span>';
                     tipBtn.disabled = false;
                     document.getElementById('custom-amount').value = '';
                 }, 2000);
             }, 2500);
         }
 
-        function showToast(msg, type = 'success') {
+        function showToast(msgOrKey, type, params) {
+            if (typeof type !== 'string') type = 'success';
+            if (!params) params = {};
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toast-msg');
             const toastIcon = document.getElementById('toast-icon');
+            let msg = (translations.zh[msgOrKey] || translations.en[msgOrKey]) ? t(msgOrKey) : msgOrKey;
+            Object.keys(params).forEach(function (k) { msg = msg.replace(new RegExp('\\{' + k + '\\}', 'g'), params[k]); });
 
             toastMsg.innerText = msg;
             
@@ -279,6 +438,117 @@
             setTimeout(() => {
                 toast.classList.add('translate-y-32', 'opacity-0');
             }, 3000);
+        }
+
+        // --- 评论功能（localStorage 持久化，可后续改为 API）---
+        const COMMENT_STORAGE_KEY = 'rialo_live_comments';
+        const STREAM_ID = 'default';
+
+        function getCommentAuthor() {
+            return isWalletConnected
+                ? (document.getElementById('wallet-address').innerText || t('connectBtn'))
+                : t('guest');
+        }
+
+        function loadComments() {
+            try {
+                const raw = localStorage.getItem(COMMENT_STORAGE_KEY);
+                const list = raw ? JSON.parse(raw) : [];
+                renderComments(list);
+            } catch (e) {
+                renderComments([]);
+            }
+        }
+
+        function saveComments(list) {
+            try {
+                localStorage.setItem(COMMENT_STORAGE_KEY, JSON.stringify(list));
+            } catch (e) {
+                showToast('commentSaveFail', 'error');
+            }
+        }
+
+        function renderComments(list) {
+            const container = document.getElementById('comment-list');
+            const emptyEl = document.getElementById('comment-list-empty');
+            if (!container) return;
+
+            // 移除占位与已有动态项，保留 empty 节点
+            const toRemove = [];
+            container.querySelectorAll('.comment-item').forEach(el => toRemove.push(el));
+            toRemove.forEach(el => el.remove());
+
+            if (emptyEl) emptyEl.style.display = list.length ? 'none' : 'block';
+
+            list.forEach(function (c) {
+                const div = document.createElement('div');
+                div.className = 'comment-item flex flex-col gap-0.5 py-2 px-3 rounded-xl bg-slate-800/50 border border-slate-700/50';
+                const timeStr = c.createdAt ? new Date(c.createdAt).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '';
+                div.innerHTML =
+                    '<div class="flex items-center justify-between gap-2">' +
+                    '<span class="text-violet-400 font-medium text-sm">' + (c.author || t('anonymous')) + '</span>' +
+                    '<span class="text-slate-500 text-xs">' + timeStr + '</span>' +
+                    '</div>' +
+                    '<p class="text-slate-300 text-sm break-words">' + (c.text || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>';
+                container.appendChild(div);
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendComment() {
+            const input = document.getElementById('comment-input');
+            const btn = document.getElementById('comment-send-btn');
+            if (!input || !btn) return;
+
+            const text = (input.value || '').trim();
+            if (!text) {
+                showToast('enterComment', 'error');
+                input.focus();
+                return;
+            }
+            if (text.length > 200) {
+                showToast('commentMaxLength', 'error');
+                return;
+            }
+
+            const comment = {
+                id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+                author: getCommentAuthor(),
+                text: text,
+                streamId: STREAM_ID,
+                createdAt: Date.now()
+            };
+
+            let list = [];
+            try {
+                const raw = localStorage.getItem(COMMENT_STORAGE_KEY);
+                list = raw ? JSON.parse(raw) : [];
+            } catch (e) {}
+            list.push(comment);
+            saveComments(list);
+            renderComments(list);
+
+            input.value = '';
+            input.focus();
+            showToast('commentSent', 'success');
+
+            // 防抖：发送中禁用按钮
+            btn.disabled = true;
+            setTimeout(function () { btn.disabled = false; }, 500);
+        }
+
+        function initComments() {
+            loadComments();
+            var commentInput = document.getElementById('comment-input');
+            if (commentInput) {
+                commentInput.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendComment();
+                    }
+                });
+            }
         }
         
         // --- HLS 播放逻辑 ---
@@ -309,16 +579,21 @@
                 });
                 hlsInstance.on(Hls.Events.ERROR, function(event, data) {
                     console.error('HLS error', event, data);
-                    showToast('直播播放发生错误，请稍后重试', 'error');
+                    showToast('streamError', 'error');
                 });
             } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
                 // Safari / iOS 原生支持
                 player.src = STREAM_URL;
                 player.addEventListener('loadedmetadata', () => player.play());
             } else {
-                showToast('当前浏览器不支持 HLS 播放，请使用 Safari 或支持 HLS 的浏览器。', 'error');
+                showToast('hlsNotSupported', 'error');
             }
         }
+
+        // 页面加载后初始化语言与评论
+        document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+        applyLang();
+        initComments();
     </script>
 </body>
 </html>
